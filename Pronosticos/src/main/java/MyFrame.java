@@ -194,7 +194,10 @@ class MyFrame
         } else if (e.getSource() == importarBtn) {
             String filename = excelProcessing.searchFile();
             filenameField.setText(filename);
-        } else if (e.getSource() == salirBtn) {
+        } else if (e.getSource() == imprimirBtn) {
+            PrintExcel printExcel = new PrintExcel();
+            printExcel.printExcel(excelProcessing.searchFile());
+        }else if (e.getSource() == salirBtn) {
             System.exit(0);
         }
     }
