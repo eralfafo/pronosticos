@@ -152,13 +152,14 @@ public class LineChartCreator {
         newLineChart(holtName,ventas,meses,holtResultados,"Holt","Meses");
 
         //Winters
-        Pair<List<Double>,List<Double>> wintersResultado;
+//        Pair<List<Double>,List<Double>> wintersResultado;
+        List<List<Double>> wintersResultado;
         Winters winters = new Winters();
         Double alphaWinters = 0.90;
         Double betaWinters = 0.90;
         Double gammaWinters = 0.10;
         wintersResultado = winters.getWinters(ventas,alphaWinters,betaWinters,gammaWinters,6);
-        newLineChart(wintersName,wintersResultado.getKey(),semestres,wintersResultado.getValue(),"Winters","Semestres");
+        newLineChart(wintersName,wintersResultado.get(0),semestres,wintersResultado.get(1),"Winters","Semestres");
 
         //Regresion Lineal
         List<Double> regresionLinealResultados;

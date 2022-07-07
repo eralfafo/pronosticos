@@ -25,6 +25,8 @@ class MyFrame
     final Font DEFAULT_LABEL_FONT = new Font("Arial", Font.PLAIN, 15);
     final Font DEFAULT_BUTTON_FONT = DEFAULT_LABEL_FONT;
 
+    String filename = "";
+
 
     Dimension size
             = Toolkit.getDefaultToolkit().getScreenSize();
@@ -182,7 +184,7 @@ class MyFrame
                     JOptionPane.showMessageDialog(null, "Pronostico realizado, ya puede revisar su excel con los resultados"
                             , "Pronostico finalizado", JOptionPane.PLAIN_MESSAGE);
                 }
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Ocurrio un error con la aplicacion", "Error", JOptionPane.ERROR_MESSAGE);
                 try {
                     wait(1000);
@@ -192,11 +194,11 @@ class MyFrame
                 System.exit(0);
             }
         } else if (e.getSource() == importarBtn) {
-            String filename = excelProcessing.searchFile();
+            filename = excelProcessing.searchFile();
             filenameField.setText(filename);
         } else if (e.getSource() == imprimirBtn) {
             PrintExcel printExcel = new PrintExcel();
-            printExcel.printExcel(excelProcessing.searchFile());
+            printExcel.printExcel(filename);
         }else if (e.getSource() == salirBtn) {
             System.exit(0);
         }

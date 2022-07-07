@@ -6,7 +6,7 @@ import java.util.List;
 public class Winters {
 
     List<Double> results = new ArrayList<>();
-    public Pair<List<Double>, List<Double>> getWinters(List<Double> ventas, Double alpha, Double beta, Double gamma, Integer groupCount){
+    public List<List<Double>> getWinters(List<Double> ventas, Double alpha, Double beta, Double gamma, Integer groupCount){
 
         Integer index = 0;
         List<Double> ytList = new ArrayList<>();
@@ -40,7 +40,10 @@ public class Winters {
                 index += 1;
             }
         }
-        Pair<List<Double>,List<Double>> res = new Pair<>(ytList,results);
+
+        List<List<Double>> res = new ArrayList<>();
+        res.add(ytList);
+        res.add(results);
         return res;
     }
 

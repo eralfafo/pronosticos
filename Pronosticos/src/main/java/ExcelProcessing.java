@@ -10,13 +10,17 @@ public class ExcelProcessing {
     File file;
     public Integer processData() throws IOException {
 
-        if (!filePath.equals("")){
-            LineChartCreator lineChartCreator = new LineChartCreator();
-            lineChartCreator.createChartWithFile(filePath);
-            return 0;
-        }
-        else {
-            return -1;
+        try {
+            if (!filePath.equals("")){
+                LineChartCreator lineChartCreator = new LineChartCreator();
+                lineChartCreator.createChartWithFile(filePath);
+                return 0;
+            }
+            else {
+                return -1;
+            }
+        }catch (Exception e){
+            throw e;
         }
     }
 
