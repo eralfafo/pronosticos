@@ -50,11 +50,12 @@ public class LineChartCreator {
             writeRowValues(row,"EMC",emcs,null,false);
 
             //EMC average
-            row = sheet.createRow((short) 3);
-            Double averageEmcs = 0D;
-            averageEmcs = getEMCAverage(emcs);
-            writeValue(row,"EMC Average",averageEmcs);
-
+            if(!sheetName.contains("winters")){
+                row = sheet.createRow((short) 3);
+                Double averageEmcs = 0D;
+                averageEmcs = getEMCAverage(emcs);
+                writeValue(row,"EMC Average",averageEmcs);
+            }
 
             //ubicacion del dibujo
             XSSFDrawing drawing = sheet.createDrawingPatriarch();
@@ -171,10 +172,10 @@ public class LineChartCreator {
         //Descomposicion de series
         List<Double> descomposicionSeriesResultado;
         DescomposicionSeries descomposicionSeries = new DescomposicionSeries(periodos);
-        Integer promedioVentas = descomposicionSeries.getPromedioVentas(ventas).intValue();
-        List<Integer> promedioTri = descomposicionSeries.getPromedioTrimestres(ventas);
+        Double promedioVentas = descomposicionSeries.getPromedioVentas(ventas);
+        List<Double> promedioTri = descomposicionSeries.getPromedioTrimestres(ventas);
         List<Double> factoresEstacionales = descomposicionSeries.getFactorEstacional(promedioTri,promedioVentas,ventas);
-        List<Double> demandaDesestacionalizada = descomposicionSeries.getDemandaDesestacionalizada(ventas,factoresEstacionales);
+        descomposicionSeries.getDemandaDesestacionalizada(ventas,factoresEstacionales);
 
         //m & b para propositos de test
         Double mDescoposicion = descomposicionSeries.getM();

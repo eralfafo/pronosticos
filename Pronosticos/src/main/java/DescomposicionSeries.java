@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -5,6 +6,7 @@ public class DescomposicionSeries {
 
     //periodo = x
     //demandaDesestacionalizada = y
+
     private List<Double> x;
     private List<Double> y;
     private int n;          //número de datos
@@ -71,16 +73,16 @@ public class DescomposicionSeries {
         return (resultado/Double.valueOf(ventas.size()));
     }
 
-    public List<Integer> getPromedioTrimestres(List<Double> ventas){
-        List<Integer> resultado = new ArrayList<>();
+    public List<Double> getPromedioTrimestres(List<Double> ventas){
+        List<Double> resultado = new ArrayList<>();
         Integer index = 0;
 
         for (int i = index; i < 6; i++){
-            Integer sumaVentasTri = 0;
-            Integer ventasCount = 0;
+            Double sumaVentasTri = 0D;
+            Double ventasCount = 0D;
             for (int yIndex = i; yIndex < ventas.size(); yIndex+= 6){
                 if(yIndex < ventas.size()){
-                    sumaVentasTri += ventas.get(yIndex).intValue();
+                    sumaVentasTri += ventas.get(yIndex);
                     ventasCount++;
                 }
             }
@@ -91,16 +93,16 @@ public class DescomposicionSeries {
     }
 
 
-    public List<Double> getFactorEstacional(List<Integer> promedioTrimestres, Integer promedio, List<Double> ventas){
+    public List<Double> getFactorEstacional(List<Double> promedioTrimestres, Double promedio, List<Double> ventas){
 
         List<Double> resultado = new ArrayList<>();
-        //son 4
-        for (Integer promedioTri : promedioTrimestres){
-            resultado.add(Double.valueOf(promedioTri) / Double.valueOf(promedio));
+        //son 6
+        for (Double promedioTri : promedioTrimestres){
+            resultado.add(promedioTri/ promedio);
         }
 
-        for (int i = 4; i < ventas.size(); i++){
-            resultado.add(resultado.get(i-4));
+        for (int i = 6; i < ventas.size(); i++){
+            resultado.add(resultado.get(i-6));
         }
 
         return resultado;
@@ -109,7 +111,9 @@ public class DescomposicionSeries {
     public List<Double> getDemandaDesestacionalizada(List<Double> ventas, List<Double> factoresEstacionales){
         List<Double> resultado = new ArrayList<>();
         for (int i = 0; i < ventas.size(); i++){
-            resultado.add(ventas.get(i)/factoresEstacionales.get(i));
+            double tempRes = ventas.get(i)/factoresEstacionales.get(i);
+            resultado.add(tempRes);
+
         }
         y = resultado;
         return resultado;
@@ -121,6 +125,10 @@ public class DescomposicionSeries {
             resultado.add(tendenciaList.get(i)*factorEstacionalList.get(i));
         }
         return resultado;
+    }
+
+    public Double round(Double value){
+        return Math.round(value*100.0)/100.0;
     }
 
 }
