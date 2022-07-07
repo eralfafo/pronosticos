@@ -2,33 +2,52 @@
 // a Simple Registration Form
 // using Java Swing
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
 class MyFrame
         extends JFrame
         implements ActionListener {
 
+    final String COMPANY_NAME = "DelProfe Barberia y Salon";
+    final int DEFAULT_WIDGET_WIDTH = 200;
+    final int DEFAULT_WIDGET_HEIGHT = 20;
+    final int DEFAULT_WINDOW_WIDTH = 600;
+    final int DEFAULT_WINDOW_HEIGHT = 400;
+    final int DEFAULT_TITLE_WIDTH = DEFAULT_WINDOW_WIDTH;
+    final int DEFAULT_TITLE_HEIGHT = 30;
+    final Font DEFAULT_TITLE_FONT = new Font("Arial", Font.PLAIN, 20);
+    final Font DEFAULT_LABEL_FONT = new Font("Arial", Font.PLAIN, 15);
+    final Font DEFAULT_BUTTON_FONT = DEFAULT_LABEL_FONT;
+
+
+    Dimension size
+            = Toolkit.getDefaultToolkit().getScreenSize();
+    int screen_width = (int)size.getWidth();
+    int screen_height = (int)size.getHeight();
+
     // Components of the Form
-    private Container c;
+    private Container main_container;
+    GridLayout main_layout = new GridLayout(9, 1);
+    JPanel file_sel_p = new JPanel(new GridLayout(1, 3));
+    JPanel title_p = new JPanel(new GridLayout(1, 1));
+    JPanel method_sel_p = new JPanel(new GridLayout(1, 2));
+    JPanel pronosticar_btns_p = new JPanel(new GridLayout(1, 1));
+    JPanel save_btns_p = new JPanel(new GridLayout(1, 3));
+    JPanel blank_p = new JPanel();
+    JPanel blank_p1 = new JPanel();
+    JPanel blank_p2 = new JPanel();
+    JPanel blank_p3 = new JPanel();
     private JLabel title;
-    private JLabel name;
-    private JTextField tname;
-    private JLabel mno;
-    private JTextField tmno;
-    private JLabel gender;
-    private JRadioButton male;
-    private JRadioButton female;
-    private ButtonGroup gengp;
+
     private JLabel dob;
     private JComboBox date;
-    private JComboBox month;
-    private JComboBox year;
-    private JLabel add;
-    private JTextArea tadd;
-    private JCheckBox term;
+
 
     private JButton importarBtn;
     private JButton imprimirBtn;
@@ -38,87 +57,113 @@ class MyFrame
 
     private JTextField filenameField;
 
-    private JTextArea tout;
-    private JLabel res;
-    private JTextArea resadd;
-
     private ExcelProcessing excelProcessing = new ExcelProcessing();
 
     private String actions[]
-            = { "Promedio Movil", "Promedio Movil doble" };
+            = {"Promedio Movil", "Promedio Movil doble"};
 
     // constructor, to initialize the components
     // with default values.
-    public MyFrame()
-    {
-        setTitle("[Nombre de la empresa]");
-        setBounds(300, 90, 600, 600);
+    public MyFrame() {
+        setTitle(COMPANY_NAME);
+        setBounds((screen_width/2) - (DEFAULT_WINDOW_WIDTH /2), (screen_height/2) - (DEFAULT_WINDOW_HEIGHT /2),
+                DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
 
-        c = getContentPane();
-        c.setLayout(null);
+        try {
+            ImageIcon imageIcon = new ImageIcon("background.png"); // load the image to a imageIcon
+            Image image = imageIcon.getImage(); // transform it
+            Image newimg = image.getScaledInstance(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+            imageIcon = new ImageIcon(newimg);
+            setContentPane(new JLabel(imageIcon));
+        } catch (Exception e){
 
-        title = new JLabel("[Nombre de la empresa]");
-        title.setFont(new Font("Arial", Font.PLAIN, 20));
-        title.setSize(300, 30);
-        title.setLocation(200, 30);
-        c.add(title);
+        }
+
+
+        main_container = getContentPane();
+        main_container.setLayout(main_layout);
+        file_sel_p.setBackground(Color.BLACK);
+
+        title = new JLabel(COMPANY_NAME, SwingConstants.CENTER);
+        title.setFont(DEFAULT_TITLE_FONT);
+        title.setSize(DEFAULT_TITLE_WIDTH, DEFAULT_TITLE_HEIGHT);
+        title_p.add(title);
 
         importarBtn = new JButton("Importar Datos");
-        importarBtn.setFont(new Font("Arial", Font.PLAIN, 15));
-        importarBtn.setSize(150, 20);
-        importarBtn.setLocation(50, 100);
+        importarBtn.setFont(DEFAULT_BUTTON_FONT);
+        importarBtn.setSize(DEFAULT_WIDGET_WIDTH, DEFAULT_WIDGET_HEIGHT);
         importarBtn.addActionListener(this);
-        c.add(importarBtn);
+        importarBtn.setBackground(Color.WHITE);
+        file_sel_p.add(importarBtn);
 
         filenameField = new JTextField("");
         filenameField.setFont(new Font("Arial", Font.PLAIN, 15));
-        filenameField.setSize(150, 20);
-        filenameField.setLocation(50, 140);
+        filenameField.setSize(DEFAULT_WIDGET_WIDTH, DEFAULT_WIDGET_HEIGHT);
         filenameField.addActionListener(this);
         filenameField.setEditable(false);
-        c.add(filenameField);
+        file_sel_p.add(filenameField);
 
-        dob = new JLabel("Metodo");
-        dob.setFont(new Font("Arial", Font.PLAIN, 20));
-        dob.setSize(200, 20);
-        dob.setLocation(290, 100);
-        c.add(dob);
+        dob = new JLabel("Metodo", SwingConstants.CENTER);
+        dob.setFont(DEFAULT_LABEL_FONT);
+        dob.setSize(DEFAULT_WIDGET_WIDTH, DEFAULT_WIDGET_HEIGHT);
+        dob.setBackground(Color.WHITE);
+        dob.setOpaque(true);
+        method_sel_p.add(dob);
 
         date = new JComboBox(actions);
-        date.setFont(new Font("Arial", Font.PLAIN, 15));
-        date.setSize(200, 20);
-        date.setLocation(370, 100);
-        c.add(date);
+        date.setFont(DEFAULT_LABEL_FONT);
+        date.setSize(DEFAULT_WIDGET_WIDTH, DEFAULT_WIDGET_HEIGHT);
+        method_sel_p.add(date);
 
         pronosticarBtn = new JButton("Pronosticar");
-        pronosticarBtn.setFont(new Font("Arial", Font.PLAIN, 15));
-        pronosticarBtn.setSize(150, 20);
-        pronosticarBtn.setLocation(290, 140);
+        pronosticarBtn.setFont(DEFAULT_LABEL_FONT);
+        pronosticarBtn.setSize(DEFAULT_WIDGET_WIDTH, DEFAULT_WIDGET_HEIGHT);
         pronosticarBtn.addActionListener(this);
-        c.add(pronosticarBtn);
+        pronosticarBtn.setBackground(Color.WHITE);
+        pronosticar_btns_p.add(pronosticarBtn);
 
         imprimirBtn = new JButton("Imprimir");
-        imprimirBtn.setFont(new Font("Arial", Font.PLAIN, 15));
-        imprimirBtn.setSize(100, 20);
-        imprimirBtn.setLocation(150, 450);
+        pronosticarBtn.setFont(DEFAULT_LABEL_FONT);
+        pronosticarBtn.setSize(DEFAULT_WIDGET_WIDTH, DEFAULT_WIDGET_HEIGHT);
         imprimirBtn.addActionListener(this);
-        c.add(imprimirBtn);
+        imprimirBtn.setBackground(Color.WHITE);
+        save_btns_p.add(imprimirBtn);
 
         guardarBtn = new JButton("Guardar");
-        guardarBtn.setFont(new Font("Arial", Font.PLAIN, 15));
-        guardarBtn.setSize(100, 20);
-        guardarBtn.setLocation(270, 450);
+        pronosticarBtn.setFont(DEFAULT_LABEL_FONT);
+        pronosticarBtn.setSize(DEFAULT_WIDGET_WIDTH, DEFAULT_WIDGET_HEIGHT);
         guardarBtn.addActionListener(this);
-        c.add(guardarBtn);
+        guardarBtn.setBackground(Color.WHITE);
+        save_btns_p.add(guardarBtn);
 
         salirBtn = new JButton("Salir");
-        salirBtn.setFont(new Font("Arial", Font.PLAIN, 15));
-        salirBtn.setSize(100, 20);
-        salirBtn.setLocation(390, 450);
+        pronosticarBtn.setFont(DEFAULT_LABEL_FONT);
+        pronosticarBtn.setSize(DEFAULT_WIDGET_WIDTH, DEFAULT_WIDGET_HEIGHT);
         salirBtn.addActionListener(this);
-        c.add(salirBtn );
+        salirBtn.setBackground(Color.WHITE);
+        save_btns_p.add(salirBtn);
+
+        title_p.setOpaque(false);
+        file_sel_p.setOpaque(false);
+        method_sel_p.setOpaque(false);
+        pronosticar_btns_p.setOpaque(false);
+        save_btns_p.setOpaque(false);
+        blank_p.setOpaque(false);
+        blank_p1.setOpaque(false);
+        blank_p2.setOpaque(false);
+        blank_p3.setOpaque(false);
+
+        main_container.add(title_p);
+        main_container.add(blank_p);
+        main_container.add(file_sel_p);
+        main_container.add(blank_p1);
+        main_container.add(method_sel_p);
+        main_container.add(blank_p2);
+        main_container.add(pronosticar_btns_p);
+        main_container.add(blank_p3);
+        main_container.add(save_btns_p);
 
         setVisible(true);
     }
@@ -126,20 +171,19 @@ class MyFrame
     // method actionPerformed()
     // to get the action performed
     // by the user and act accordingly
-    public void actionPerformed(ActionEvent e)
-    {
+    public void actionPerformed(ActionEvent e) {
         if (e.getSource() == pronosticarBtn) {
             try {
                 Integer status = excelProcessing.processData();
-                if(status == -1){
-                    JOptionPane.showMessageDialog (null, "Necesitas seleccionar un archivo antes de ejecutar el pronostico"
+                if (status == -1) {
+                    JOptionPane.showMessageDialog(null, "Necesitas seleccionar un archivo antes de ejecutar el pronostico"
                             , "Archivo no seleccionado", JOptionPane.ERROR_MESSAGE);
-                }else {
-                    JOptionPane.showMessageDialog (null, "Pronostico realizado, ya puede revisar su excel con los resultados"
+                } else {
+                    JOptionPane.showMessageDialog(null, "Pronostico realizado, ya puede revisar su excel con los resultados"
                             , "Pronostico finalizado", JOptionPane.PLAIN_MESSAGE);
                 }
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog (null, "Ocurrio un error con la aplicacion", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Ocurrio un error con la aplicacion", "Error", JOptionPane.ERROR_MESSAGE);
                 try {
                     wait(1000);
                 } catch (InterruptedException exc) {
@@ -147,14 +191,10 @@ class MyFrame
                 }
                 System.exit(0);
             }
-        }
-
-        else if (e.getSource() == importarBtn) {
+        } else if (e.getSource() == importarBtn) {
             String filename = excelProcessing.searchFile();
             filenameField.setText(filename);
-        }
-
-        else if (e.getSource() == salirBtn) {
+        } else if (e.getSource() == salirBtn) {
             System.exit(0);
         }
     }
